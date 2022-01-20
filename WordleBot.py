@@ -87,7 +87,7 @@ while(iter <= 6):
     dicto = removeInvalid(dicto,cor,pre,exc)
     guess = random.choice(dicto)
     #guess = dicto[0]
-    time.sleep(2)
+    time.sleep(1.75)
     sendWord(guess)
     print(dicto)
     dicto.remove(guess)
