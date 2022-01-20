@@ -92,7 +92,8 @@ while(iter <= 6):
     print(dicto)
     dicto.remove(guess)
     iter += 1
-
+time.sleep(10)
+driver.close()
 
 
 
