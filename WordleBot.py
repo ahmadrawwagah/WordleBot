@@ -79,7 +79,7 @@ with open('WordBank.txt', 'r') as f:
 sendWord('tares')
 
 iter = 0
-while(iter <= 6):
+while(iter <= 5):
     row = getRow(iter)
     cor,pre,exc = checkLet(row)
     if (len(cor) == 5):
