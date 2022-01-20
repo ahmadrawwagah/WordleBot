@@ -89,7 +89,7 @@ while(iter <= 6):
     #guess = dicto[0]
     time.sleep(1.75)
     sendWord(guess)
-    print(dicto)
+    #print(dicto)
     dicto.remove(guess)
     iter += 1
 time.sleep(10)
