@@ -1,4 +1,5 @@
 from importlib.machinery import BYTECODE_SUFFIXES
+import random
 import time
 from wsgiref.simple_server import WSGIRequestHandler
 import selenium
@@ -23,11 +24,12 @@ def checkLet (temprow):
         tempI += 1
     return correct,present,exclude
 
-def sendWord (actions,word):
+def sendWord (word):
     actions.send_keys(word).perform()
     actions.send_keys(Keys.ENTER).perform()
 
-def getRow(gameapp,index):
+def getRow(index):
+    gameapp = driver.find_element(By.TAG_NAME,'game-app')
     sone = gameapp.shadow_root
     gametheme = sone.find_element(By.CSS_SELECTOR, 'game-theme-manager')
     board = gametheme.find_element(By.CSS_SELECTOR,'#game').find_element(By.CSS_SELECTOR,'#board-container').find_element(By.CSS_SELECTOR,'#board')
@@ -36,6 +38,31 @@ def getRow(gameapp,index):
     stwo = gamerowone.shadow_root
     row = stwo.find_element(By.CSS_SELECTOR,'.row').find_elements(By.CSS_SELECTOR,'game-tile')
     return row
+
+def removeInvalid(dicto,correct,present,absent):
+    iterdict =[]
+    for i in dicto:
+        abs = 1
+        cor = 1
+        pre = 1
+        for letter in absent:
+            if letter in i:
+                abs = 0
+                break
+        
+        for j in correct:
+            if j[0] != i[j[1]]:
+                abs = 0
+                break
+
+        for k in present:
+            if k[0] not in i or k[0] == i[k[1]]:
+                pre = 0
+                break
+        if abs and cor and pre:
+            iterdict.append(i)
+    return iterdict
+
 
 driver = webdriver.Chrome()
 driver.get('https://www.powerlanguage.co.uk/wordle/')
@@ -46,30 +73,33 @@ gameapp = driver.find_element(By.TAG_NAME,'game-app')
 webdriver.ActionChains(driver).click_and_hold(gameapp).perform()
 webdriver.ActionChains(driver).release().perform()
 
-sendWord(actions, 'adieu')
-row = getRow(gameapp,0)
-correct,present,exclude = checkLet(row)
-print(correct)
-print(present)
-print(exclude)
+with open('WordBank.txt', 'r') as f:
+    dicto = [line.strip() for line in f]
 
-time.sleep(3)
+sendWord('tares')
 
-sendWord(actions, 'proxy')
-row = getRow(gameapp,1)
-correct,present,exclude = checkLet(row)
-print(correct)
-print(present)
-print(exclude)
+iter = 0
+while(iter <= 6):
+    row = getRow(iter)
+    cor,pre,exc = checkLet(row)
+    if (len(cor) == 5):
+        break
+    dicto = removeInvalid(dicto,cor,pre,exc)
+    guess = random.choice(dicto)
+    #guess = dicto[0]
+    time.sleep(2)
+    sendWord(guess)
+    print(dicto)
+    dicto.remove(guess)
+    iter += 1
 
-time.sleep(3)
 
-sendWord(actions, 'point')
-row = getRow(gameapp,2)
-correct,present,exclude = checkLet(row)
-print(correct)
-print(present)
-print(exclude)
+
+
+
+
+
+
 
 
 
