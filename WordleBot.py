@@ -2,7 +2,6 @@ from importlib.machinery import BYTECODE_SUFFIXES
 import random
 import time
 from wsgiref.simple_server import WSGIRequestHandler
-import selenium
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -49,16 +48,17 @@ def removeInvalid(dicto,correct,present,absent):
             if letter in i:
                 abs = 0
                 break
-        
+
         for j in correct:
             if j[0] != i[j[1]]:
-                abs = 0
+                cor = 0
                 break
 
         for k in present:
             if k[0] not in i or k[0] == i[k[1]]:
                 pre = 0
                 break
+        
         if abs and cor and pre:
             iterdict.append(i)
     return iterdict
@@ -87,22 +87,10 @@ while(iter <= 5):
     dicto = removeInvalid(dicto,cor,pre,exc)
     guess = random.choice(dicto)
     #guess = dicto[0]
-    time.sleep(1.75)
+    time.sleep(2.2)
     sendWord(guess)
     #print(dicto)
     dicto.remove(guess)
     iter += 1
 time.sleep(10)
 driver.close()
-
-
-
-
-
-
-
-
-
-
-
-
